@@ -154,14 +154,12 @@ const FICHA_FRONT = {
 
 const FICHA_BACK = {
   bg: fichaVersoUrl,
-  // Normalized to frente dimensions so both sides render at the correct 210×150mm aspect ratio.
-  // Source image is 1350×1165; coordinates are scaled: x' = x*(1496/1350), y' = y*(1051/1165)
-  canvasWidth:  1496,
+  canvasWidth:  1214,
   canvasHeight: 1051,
   fields: {
-    contatoNome:     { x: 407, y: 449 },
-    contatoTelefone: { x: 500, y: 562 },
-    parentesco:      { x: 547, y: 676 },
+    contatoNome:     { x: 330, y: 447 },
+    contatoTelefone: { x: 406, y: 561 },
+    parentesco:      { x: 444, y: 674 },
   },
 }
 
@@ -194,7 +192,6 @@ export async function renderFichaBack(
   const ctx = canvas.getContext('2d')!
 
   const bg = await loadImage(FICHA_BACK.bg)
-  // Draw the source image (1350×1165) scaled to fill the normalized canvas (1496×1051)
   ctx.drawImage(bg, 0, 0, FICHA_BACK.canvasWidth, FICHA_BACK.canvasHeight)
 
   applyFont(ctx, FICHA_FONT)
