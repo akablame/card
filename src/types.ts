@@ -8,3 +8,14 @@ export interface CardData {
   endereco: string
   foto: File | null
 }
+
+export interface FichaData {
+  nome: string
+  cpf: string
+  rg: string
+  endereco: string
+  telefone: string
+  contatoNome: string
+  contatoTelefone: string
+  parentesco: string
+}

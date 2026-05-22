@@ -16,7 +16,7 @@ function maskCPF(raw: string): string {
 
 export function CardForm({ data, onChange }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [dragging, setDragging] = useState(false)
+  const [dragging, setDragging]     = useState(false)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
   useEffect(() => {
@@ -26,10 +26,8 @@ export function CardForm({ data, onChange }: Props) {
     return () => URL.revokeObjectURL(url)
   }, [data.foto])
 
-  const set =
-    (key: keyof Omit<CardData, 'foto'>) =>
-    (e: ChangeEvent<HTMLInputElement>) =>
-      onChange({ ...data, [key]: e.target.value })
+  const set = (key: keyof Omit<CardData, 'foto'>) => (e: ChangeEvent<HTMLInputElement>) =>
+    onChange({ ...data, [key]: e.target.value })
 
   const setCPF = (e: ChangeEvent<HTMLInputElement>) =>
     onChange({ ...data, cpf: maskCPF(e.target.value) })
@@ -46,67 +44,50 @@ export function CardForm({ data, onChange }: Props) {
         <Field label="Categoria"      value={data.categoria}  onChange={set('categoria')}  placeholder="Ex: Médium" />
         <Field label="Matrícula"      value={data.matricula}  onChange={set('matricula')} />
 
-        {/* Photo drag-and-drop zone */}
-        <div className="flex flex-col gap-1">
-          <label className="text-sm text-stone-600">Foto</label>
+        <div className="flex flex-col gap-1.5">
+          <label className="font-lora text-sm" style={{ color: '#7A4A1F' }}>Foto</label>
           <div
             onDragOver={e  => { e.preventDefault(); setDragging(true)  }}
             onDragEnter={e => { e.preventDefault(); setDragging(true)  }}
             onDragLeave={() => setDragging(false)}
-            onDrop={e => {
-              e.preventDefault()
-              setDragging(false)
-              applyFile(e.dataTransfer.files[0])
-            }}
+            onDrop={e => { e.preventDefault(); setDragging(false); applyFile(e.dataTransfer.files[0]) }}
             onClick={() => fileInputRef.current?.click()}
-            className={`cursor-pointer rounded-xl border-2 border-dashed transition-all select-none ${
-              dragging
-                ? 'border-stone-500 bg-stone-50 scale-[1.01]'
-                : previewUrl
-                ? 'border-stone-200 hover:border-stone-400'
-                : 'border-stone-200 hover:border-stone-400 hover:bg-stone-50'
-            }`}
+            className="cursor-pointer rounded-xl transition-all select-none"
+            style={{
+              border: dragging ? '2px dashed #D4A017' : '2px dashed rgba(122,74,31,0.25)',
+              background: dragging ? 'rgba(212,160,23,0.05)' : previewUrl ? '#fff' : 'rgba(246,235,221,0.4)',
+            }}
           >
             {previewUrl ? (
               <div className="flex items-center gap-3 p-3">
-                <img
-                  src={previewUrl}
-                  alt="Foto selecionada"
-                  className="w-14 object-cover rounded-lg flex-shrink-0"
-                  style={{ height: '4.5rem' }}
-                />
+                <img src={previewUrl} alt="Foto" className="w-14 rounded-lg flex-shrink-0 object-cover" style={{ height: '4.5rem' }} />
                 <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                  <span className="text-sm font-medium text-stone-700 truncate">
-                    {data.foto?.name}
-                  </span>
-                  <span className="text-xs text-stone-400">Clique para trocar</span>
+                  <span className="font-lora text-sm font-semibold truncate" style={{ color: '#3B1F0E' }}>{data.foto?.name}</span>
+                  <span className="font-lora text-xs italic" style={{ color: 'rgba(122,74,31,0.55)' }}>Clique para trocar</span>
                 </div>
                 <button
-                  onClick={e => { e.stopPropagation(); onChange({ ...data, foto: null }) }}
-                  className="text-stone-300 hover:text-red-500 transition-colors p-1.5 rounded-lg hover:bg-red-50 flex-shrink-0"
-                  title="Remover foto"
                   type="button"
+                  onClick={e => { e.stopPropagation(); onChange({ ...data, foto: null }) }}
+                  className="p-1.5 rounded-lg transition-colors flex-shrink-0"
+                  style={{ color: 'rgba(122,74,31,0.35)' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#fef2f2'; e.currentTarget.style.color = '#dc2626' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = ''; e.currentTarget.style.color = 'rgba(122,74,31,0.35)' }}
                 >
                   <XIcon />
                 </button>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center py-6 gap-2 text-center px-4">
+              <div className="flex flex-col items-center justify-center py-7 gap-2">
                 <UploadIcon />
-                <p className="text-sm text-stone-400 leading-snug">
+                <p className="font-lora text-sm text-center px-4" style={{ color: 'rgba(122,74,31,0.55)' }}>
                   Arraste uma foto ou{' '}
-                  <span className="text-stone-600 font-medium">clique para selecionar</span>
+                  <span className="font-semibold not-italic" style={{ color: '#3B1F0E' }}>clique para selecionar</span>
                 </p>
               </div>
             )}
           </div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={e => applyFile(e.target.files?.[0])}
-          />
+          <input ref={fileInputRef} type="file" accept="image/*" className="hidden"
+            onChange={e => applyFile(e.target.files?.[0])} />
         </div>
       </Section>
 
@@ -119,12 +100,12 @@ export function CardForm({ data, onChange }: Props) {
   )
 }
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
-
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <fieldset className="flex flex-col gap-3 border border-stone-200 rounded-xl p-4">
-      <legend className="text-xs font-semibold text-stone-400 uppercase tracking-wider px-1">
+    <fieldset className="flex flex-col gap-3.5 rounded-xl p-4"
+      style={{ border: '1px solid rgba(122,74,31,0.18)' }}>
+      <legend className="font-cinzel text-xs font-semibold uppercase tracking-widest px-1.5"
+        style={{ color: '#3B1F0E' }}>
         {label}
       </legend>
       {children}
@@ -142,14 +123,21 @@ interface FieldProps {
 
 function Field({ label, value, onChange, type = 'text', placeholder }: FieldProps) {
   return (
-    <div className="flex flex-col gap-1">
-      <label className="text-sm text-stone-600">{label}</label>
+    <div className="flex flex-col gap-1.5">
+      <label className="font-lora text-sm" style={{ color: '#7A4A1F' }}>{label}</label>
       <input
         type={type}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="border border-stone-300 rounded-lg px-3 py-2 text-sm text-stone-800 placeholder:text-stone-300 focus:outline-none focus:ring-2 focus:ring-stone-400 focus:border-transparent transition-shadow"
+        className="font-lora text-sm rounded-lg px-3 py-2.5 w-full transition-shadow"
+        style={{
+          border: '1px solid rgba(122,74,31,0.25)',
+          background: '#fff',
+          color: '#3B1F0E',
+        }}
+        onFocus={e => { e.currentTarget.style.outline = 'none'; e.currentTarget.style.boxShadow = '0 0 0 2px rgba(212,160,23,0.5)'; e.currentTarget.style.borderColor = '#D4A017' }}
+        onBlur={e => { e.currentTarget.style.boxShadow = ''; e.currentTarget.style.borderColor = 'rgba(122,74,31,0.25)' }}
       />
     </div>
   )
@@ -157,7 +145,8 @@ function Field({ label, value, onChange, type = 'text', placeholder }: FieldProp
 
 function UploadIcon() {
   return (
-    <svg className="w-7 h-7 text-stone-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg className="w-7 h-7" style={{ color: 'rgba(122,74,31,0.3)' }} viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
       <polyline points="17 8 12 3 7 8" />
       <line x1="12" y1="3" x2="12" y2="15" />
@@ -167,7 +156,8 @@ function UploadIcon() {
 
 function XIcon() {
   return (
-    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <line x1="18" y1="6" x2="6" y2="18" />
       <line x1="6" y1="6" x2="18" y2="18" />
     </svg>

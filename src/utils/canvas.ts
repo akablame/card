@@ -1,6 +1,8 @@
 import frenteUrl from '../assets/frente.png'
 import versoUrl from '../assets/verso.png'
-import type { CardData } from '../types'
+import fichaFrenteUrl from '../assets/ficha-frente.png'
+import fichaVersoUrl from '../assets/ficha-verso.png'
+import type { CardData, FichaData } from '../types'
 
 // ─── Layout configuration ──────────────────────────────────────────────────────
 // All coordinates are in pixels relative to the full-size template image.
@@ -126,4 +128,78 @@ export async function renderBack(
   ctx.fillText(data.cpf,      f.cpf.x,      f.cpf.y)
   ctx.fillText(data.rg,       f.rg.x,       f.rg.y)
   ctx.fillText(data.endereco, f.endereco.x, f.endereco.y)
+}
+
+// ─── Ficha layout configuration ───────────────────────────────────────────────
+
+const FICHA_FONT = {
+  size: 34,
+  family: 'Arial, sans-serif',
+  color: '#2d1b0e',
+  bold: false,
+}
+
+const FICHA_FRONT = {
+  bg: fichaFrenteUrl,
+  canvasWidth:  1496,
+  canvasHeight: 1051,
+  fields: {
+    nome:     { x: 364, y: 427 },
+    cpf:      { x: 318, y: 532 },
+    rg:       { x: 297, y: 638 },
+    endereco: { x: 448, y: 737 },
+    telefone: { x: 438, y: 835 },
+  },
+}
+
+const FICHA_BACK = {
+  bg: fichaVersoUrl,
+  // Normalized to frente dimensions so both sides render at the correct 210×150mm aspect ratio.
+  // Source image is 1350×1165; coordinates are scaled: x' = x*(1496/1350), y' = y*(1051/1165)
+  canvasWidth:  1496,
+  canvasHeight: 1051,
+  fields: {
+    contatoNome:     { x: 407, y: 449 },
+    contatoTelefone: { x: 500, y: 562 },
+    parentesco:      { x: 547, y: 676 },
+  },
+}
+
+export async function renderFichaFront(
+  canvas: HTMLCanvasElement,
+  data: FichaData,
+): Promise<void> {
+  canvas.width  = FICHA_FRONT.canvasWidth
+  canvas.height = FICHA_FRONT.canvasHeight
+  const ctx = canvas.getContext('2d')!
+
+  const bg = await loadImage(FICHA_FRONT.bg)
+  ctx.drawImage(bg, 0, 0, FICHA_FRONT.canvasWidth, FICHA_FRONT.canvasHeight)
+
+  applyFont(ctx, FICHA_FONT)
+  const f = FICHA_FRONT.fields
+  ctx.fillText(data.nome,     f.nome.x,     f.nome.y)
+  ctx.fillText(data.cpf,      f.cpf.x,      f.cpf.y)
+  ctx.fillText(data.rg,       f.rg.x,       f.rg.y)
+  ctx.fillText(data.endereco, f.endereco.x, f.endereco.y)
+  ctx.fillText(data.telefone, f.telefone.x, f.telefone.y)
+}
+
+export async function renderFichaBack(
+  canvas: HTMLCanvasElement,
+  data: FichaData,
+): Promise<void> {
+  canvas.width  = FICHA_BACK.canvasWidth
+  canvas.height = FICHA_BACK.canvasHeight
+  const ctx = canvas.getContext('2d')!
+
+  const bg = await loadImage(FICHA_BACK.bg)
+  // Draw the source image (1350×1165) scaled to fill the normalized canvas (1496×1051)
+  ctx.drawImage(bg, 0, 0, FICHA_BACK.canvasWidth, FICHA_BACK.canvasHeight)
+
+  applyFont(ctx, FICHA_FONT)
+  const f = FICHA_BACK.fields
+  ctx.fillText(data.contatoNome,     f.contatoNome.x,     f.contatoNome.y)
+  ctx.fillText(data.contatoTelefone, f.contatoTelefone.x, f.contatoTelefone.y)
+  ctx.fillText(data.parentesco,      f.parentesco.x,      f.parentesco.y)
 }

@@ -21,7 +21,8 @@ export function Toast({ message, show, onHide }: Props) {
         show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3 pointer-events-none'
       }`}
     >
-      <div className="bg-stone-800 text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-xl whitespace-nowrap">
+      <div className="font-cinzel text-sm font-semibold px-5 py-3 rounded-xl shadow-xl whitespace-nowrap border border-[#D4A017]/40"
+        style={{ backgroundColor: '#3B1F0E', color: '#F6EBDD' }}>
         {message}
       </div>
     </div>

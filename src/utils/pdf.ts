@@ -58,3 +58,14 @@ export function downloadPDF(
   pdf.addImage(page.toDataURL('image/jpeg', 0.93), 'JPEG', 0, 0, PAGE_W_MM, PAGE_H_MM)
   pdf.save('carteirinha.pdf')
 }
+
+const FICHA_W_MM = 210
+const FICHA_H_MM = 150
+
+export function downloadFichaPDF(front: HTMLCanvasElement, back: HTMLCanvasElement): void {
+  const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: [FICHA_W_MM, FICHA_H_MM] })
+  pdf.addImage(front.toDataURL('image/jpeg', 0.93), 'JPEG', 0, 0, FICHA_W_MM, FICHA_H_MM)
+  pdf.addPage([FICHA_W_MM, FICHA_H_MM], 'landscape')
+  pdf.addImage(back.toDataURL('image/jpeg', 0.93), 'JPEG', 0, 0, FICHA_W_MM, FICHA_H_MM)
+  pdf.save('ficha.pdf')
+}

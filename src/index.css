@@ -1,1 +1,28 @@
 @import "tailwindcss";
+
+/* ── Brand fonts via @theme (Tailwind v4 auto-generates font-cinzel etc.) ── */
+@theme {
+  --font-cinzel:   'Cinzel', serif;
+  --font-lora:     'Lora', serif;
+  --font-playfair: 'Playfair Display', serif;
+
+  --color-brand-dark:   #3B1F0E;
+  --color-brand-medium: #7A4A1F;
+  --color-brand-gold:   #D4A017;
+  --color-brand-beige:  #F6EBDD;
+  --color-brand-blue:   #00A9C6;
+}
+
+body {
+  font-family: 'Lora', serif;
+  background-color: #F6EBDD;
+  color: #3B1F0E;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Consistent warm focus ring for all interactive elements */
+:focus-visible {
+  outline: 2px solid #D4A017;
+  outline-offset: 2px;
+}
