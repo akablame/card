@@ -64,7 +64,18 @@ const FICHA_H_MM = 297 / 2 // 148.5mm — two fichas fill one A4 portrait page
 
 export function downloadFichaPDF(front: HTMLCanvasElement, back: HTMLCanvasElement): void {
   const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
-  pdf.addImage(front.toDataURL('image/jpeg', 0.93), 'JPEG', 0, 0,           FICHA_W_MM, FICHA_H_MM)
-  pdf.addImage(back.toDataURL('image/jpeg', 0.93),  'JPEG', 0, FICHA_H_MM, FICHA_W_MM, FICHA_H_MM)
+  const frontData = front.toDataURL('image/jpeg', 0.93)
+  const backData  = back.toDataURL('image/jpeg', 0.93)
+
+  // Page 1 — front of paper: 2× frente (top + bottom)
+  pdf.addImage(frontData, 'JPEG', 0, 0,           FICHA_W_MM, FICHA_H_MM)
+  pdf.addImage(frontData, 'JPEG', 0, FICHA_H_MM,  FICHA_W_MM, FICHA_H_MM)
+
+  // Page 2 — back of paper: 2× verso (top + bottom, same orientation)
+  // Print double-sided with "Flip on Long Edge" so each verso aligns with its frente
+  pdf.addPage()
+  pdf.addImage(backData, 'JPEG', 0, 0,           FICHA_W_MM, FICHA_H_MM)
+  pdf.addImage(backData, 'JPEG', 0, FICHA_H_MM,  FICHA_W_MM, FICHA_H_MM)
+
   pdf.save('ficha.pdf')
 }
