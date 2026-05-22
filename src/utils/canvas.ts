@@ -157,9 +157,9 @@ const FICHA_BACK = {
   canvasWidth:  1496,
   canvasHeight: 1051,
   fields: {
-    contatoNome:     { x: 407, y: 449 },
-    contatoTelefone: { x: 500, y: 562 },
-    parentesco:      { x: 547, y: 676 },
+    contatoNome:     { x: 399, y: 497 },
+    contatoTelefone: { x: 487, y: 623 },
+    parentesco:      { x: 535, y: 734 },
   },
 }
 
