@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
-import logoUrl from './assets/logo.png'
+import logoUrl from './assets/logo'
 import type { CardData, FichaData } from './types'
 import { CardForm } from './components/CardForm'
 import { Preview } from './components/Preview'
