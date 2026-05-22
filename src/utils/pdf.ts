@@ -60,12 +60,11 @@ export function downloadPDF(
 }
 
 const FICHA_W_MM = 210
-const FICHA_H_MM = 150
+const FICHA_H_MM = 297 / 2 // 148.5mm — two fichas fill one A4 portrait page
 
 export function downloadFichaPDF(front: HTMLCanvasElement, back: HTMLCanvasElement): void {
-  const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: [FICHA_W_MM, FICHA_H_MM] })
-  pdf.addImage(front.toDataURL('image/jpeg', 0.93), 'JPEG', 0, 0, FICHA_W_MM, FICHA_H_MM)
-  pdf.addPage([FICHA_W_MM, FICHA_H_MM], 'landscape')
-  pdf.addImage(back.toDataURL('image/jpeg', 0.93), 'JPEG', 0, 0, FICHA_W_MM, FICHA_H_MM)
+  const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
+  pdf.addImage(front.toDataURL('image/jpeg', 0.93), 'JPEG', 0, 0,           FICHA_W_MM, FICHA_H_MM)
+  pdf.addImage(back.toDataURL('image/jpeg', 0.93),  'JPEG', 0, FICHA_H_MM, FICHA_W_MM, FICHA_H_MM)
   pdf.save('ficha.pdf')
 }
