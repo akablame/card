@@ -154,12 +154,12 @@ const FICHA_FRONT = {
 
 const FICHA_BACK = {
   bg: fichaVersoUrl,
-  canvasWidth:  1214,
+  canvasWidth:  1496,
   canvasHeight: 1051,
   fields: {
-    contatoNome:     { x: 330, y: 447 },
-    contatoTelefone: { x: 406, y: 561 },
-    parentesco:      { x: 444, y: 674 },
+    contatoNome:     { x: 407, y: 449 },
+    contatoTelefone: { x: 500, y: 562 },
+    parentesco:      { x: 547, y: 676 },
   },
 }
 
