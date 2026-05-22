@@ -144,11 +144,11 @@ const FICHA_FRONT = {
   canvasWidth:  1496,
   canvasHeight: 1051,
   fields: {
-    nome:     { x: 364, y: 427 },
-    cpf:      { x: 318, y: 532 },
-    rg:       { x: 297, y: 638 },
-    endereco: { x: 448, y: 737 },
-    telefone: { x: 438, y: 835 },
+    nome:     { x: 364, y: 425 },
+    cpf:      { x: 318, y: 530 },
+    rg:       { x: 297, y: 635 },
+    endereco: { x: 448, y: 735 },
+    telefone: { x: 438, y: 830 },
   },
 }
 
@@ -157,9 +157,9 @@ const FICHA_BACK = {
   canvasWidth:  1496,
   canvasHeight: 1051,
   fields: {
-    contatoNome:     { x: 399, y: 497 },
-    contatoTelefone: { x: 487, y: 623 },
-    parentesco:      { x: 535, y: 734 },
+    contatoNome:     { x: 399, y: 491 },
+    contatoTelefone: { x: 487, y: 615 },
+    parentesco:      { x: 535, y: 730 },
   },
 }
 
