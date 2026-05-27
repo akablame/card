@@ -59,8 +59,11 @@ export function downloadPDF(
   pdf.save('carteirinha.pdf')
 }
 
-const FICHA_W_MM = 210
-const FICHA_H_MM = 297 / 2 // 148.5mm — two fichas fill one A4 portrait page
+const FICHA_W_MM = 205
+const FICHA_H_MM = 130
+const FICHA_X_MM = (PAGE_W_MM - FICHA_W_MM) / 2 // 2.5mm
+const FICHA_Y_MM = 15
+const FICHA_GAP_MM = 7
 
 export function downloadPagamentoPDF(
   cards: Array<{ front: HTMLCanvasElement; back: HTMLCanvasElement }>,
@@ -77,14 +80,14 @@ export function downloadFichaPDF(front: HTMLCanvasElement, back: HTMLCanvasEleme
   const backData  = back.toDataURL('image/jpeg', 0.93)
 
   // Page 1 — front of paper: 2× frente (top + bottom)
-  pdf.addImage(frontData, 'JPEG', 0, 0,           FICHA_W_MM, FICHA_H_MM)
-  pdf.addImage(frontData, 'JPEG', 0, FICHA_H_MM,  FICHA_W_MM, FICHA_H_MM)
+  pdf.addImage(frontData, 'JPEG', FICHA_X_MM, FICHA_Y_MM,                    FICHA_W_MM, FICHA_H_MM)
+  pdf.addImage(frontData, 'JPEG', FICHA_X_MM, FICHA_Y_MM + FICHA_H_MM + FICHA_GAP_MM, FICHA_W_MM, FICHA_H_MM)
 
   // Page 2 — back of paper: 2× verso (top + bottom, same orientation)
   // Print double-sided with "Flip on Long Edge" so each verso aligns with its frente
   pdf.addPage()
-  pdf.addImage(backData, 'JPEG', 0, 0,           FICHA_W_MM, FICHA_H_MM)
-  pdf.addImage(backData, 'JPEG', 0, FICHA_H_MM,  FICHA_W_MM, FICHA_H_MM)
+  pdf.addImage(backData, 'JPEG', FICHA_X_MM, FICHA_Y_MM,                    FICHA_W_MM, FICHA_H_MM)
+  pdf.addImage(backData, 'JPEG', FICHA_X_MM, FICHA_Y_MM + FICHA_H_MM + FICHA_GAP_MM, FICHA_W_MM, FICHA_H_MM)
 
   pdf.save('ficha.pdf')
 }

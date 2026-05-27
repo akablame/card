@@ -145,6 +145,7 @@ const FICHA_FRONT = {
   bg: fichaFrenteUrl,
   canvasWidth:  1496,
   canvasHeight: 1051,
+  photo: { x: 1140, y: 218, w: 150, h: 200 },
   fields: {
     nome:     { x: 364, y: 425 },
     cpf:      { x: 318, y: 530 },
@@ -159,9 +160,12 @@ const FICHA_BACK = {
   canvasWidth:  1496,
   canvasHeight: 1051,
   fields: {
-    contatoNome:     { x: 399, y: 491 },
-    contatoTelefone: { x: 487, y: 615 },
-    parentesco:      { x: 535, y: 730 },
+    contatoNome1:     { x: 307, y: 697 },
+    contatoTelefone1: { x: 346, y: 791 },
+    parentesco1:      { x: 373, y: 883 },
+    contatoNome2:     { x: 951, y: 697 },
+    contatoTelefone2: { x: 990, y: 740 },
+    parentesco2:      { x: 1018, y: 882 },
   },
 }
 
@@ -175,6 +179,17 @@ export async function renderFichaFront(
 
   const bg = await loadImage(FICHA_FRONT.bg)
   ctx.drawImage(bg, 0, 0, FICHA_FRONT.canvasWidth, FICHA_FRONT.canvasHeight)
+
+  if (data.foto) {
+    const photoUrl = URL.createObjectURL(data.foto)
+    try {
+      const photo = await loadImage(photoUrl)
+      const { x, y, w, h } = FICHA_FRONT.photo
+      ctx.drawImage(photo, x, y, w, h)
+    } finally {
+      URL.revokeObjectURL(photoUrl)
+    }
+  }
 
   applyFont(ctx, FICHA_FONT)
   const f = FICHA_FRONT.fields
@@ -198,9 +213,12 @@ export async function renderFichaBack(
 
   applyFont(ctx, FICHA_FONT)
   const f = FICHA_BACK.fields
-  ctx.fillText(data.contatoNome,     f.contatoNome.x,     f.contatoNome.y)
-  ctx.fillText(data.contatoTelefone, f.contatoTelefone.x, f.contatoTelefone.y)
-  ctx.fillText(data.parentesco,      f.parentesco.x,      f.parentesco.y)
+  ctx.fillText(data.contatoNome1,     f.contatoNome1.x,     f.contatoNome1.y)
+  ctx.fillText(data.contatoTelefone1, f.contatoTelefone1.x, f.contatoTelefone1.y)
+  ctx.fillText(data.parentesco1,      f.parentesco1.x,      f.parentesco1.y)
+  ctx.fillText(data.contatoNome2,     f.contatoNome2.x,     f.contatoNome2.y)
+  ctx.fillText(data.contatoTelefone2, f.contatoTelefone2.x, f.contatoTelefone2.y)
+  ctx.fillText(data.parentesco2,      f.parentesco2.x,      f.parentesco2.y)
 }
 
 // ─── Pagamento layout configuration ─────────────────────────────────────────

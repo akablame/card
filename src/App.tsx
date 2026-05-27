@@ -17,8 +17,9 @@ const INITIAL_CARD: CardData = {
   cpf: '', rg: '', endereco: '', foto: null,
 }
 const INITIAL_FICHA: FichaData = {
-  nome: '', cpf: '', rg: '', endereco: '', telefone: '',
-  contatoNome: '', contatoTelefone: '', parentesco: '',
+  nome: '', cpf: '', rg: '', endereco: '', telefone: '', foto: null,
+  contatoNome1: '', contatoTelefone1: '', parentesco1: '',
+  contatoNome2: '', contatoTelefone2: '', parentesco2: '',
 }
 const INITIAL_PAGAMENTO: PagamentoData = {
   nome: '', matricula: '', categoria: '',
@@ -100,7 +101,7 @@ export default function App() {
   }, [count, cards])
 
   useEffect(() => {
-    try { localStorage.setItem(FICHA_KEY, JSON.stringify(fichaData)) }
+    try { const { foto: _, ...rest } = fichaData; localStorage.setItem(FICHA_KEY, JSON.stringify(rest)) }
     catch { /* ignore */ }
   }, [fichaData])
 

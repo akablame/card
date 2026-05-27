@@ -15,9 +15,13 @@ export interface FichaData {
   rg: string
   endereco: string
   telefone: string
-  contatoNome: string
-  contatoTelefone: string
-  parentesco: string
+  foto: File | null
+  contatoNome1: string
+  contatoTelefone1: string
+  parentesco1: string
+  contatoNome2: string
+  contatoTelefone2: string
+  parentesco2: string
 }
 
 export interface PagamentoData {
