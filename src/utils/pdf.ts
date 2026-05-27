@@ -62,6 +62,15 @@ export function downloadPDF(
 const FICHA_W_MM = 210
 const FICHA_H_MM = 297 / 2 // 148.5mm — two fichas fill one A4 portrait page
 
+export function downloadPagamentoPDF(
+  cards: Array<{ front: HTMLCanvasElement; back: HTMLCanvasElement }>,
+): void {
+  const page = renderPageCanvas(cards, false)
+  const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
+  pdf.addImage(page.toDataURL('image/jpeg', 0.93), 'JPEG', 0, 0, PAGE_W_MM, PAGE_H_MM)
+  pdf.save('pagamento.pdf')
+}
+
 export function downloadFichaPDF(front: HTMLCanvasElement, back: HTMLCanvasElement): void {
   const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
   const frontData = front.toDataURL('image/jpeg', 0.93)

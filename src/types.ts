@@ -19,3 +19,9 @@ export interface FichaData {
   contatoTelefone: string
   parentesco: string
 }
+
+export interface PagamentoData {
+  nome: string
+  matricula: string
+  categoria: string
+}

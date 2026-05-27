@@ -1,14 +1,16 @@
 import { useState, useCallback, useEffect } from 'react'
 import logoUrl from './assets/logo'
-import type { CardData, FichaData } from './types'
+import type { CardData, FichaData, PagamentoData } from './types'
 import { CardForm } from './components/CardForm'
 import { Preview } from './components/Preview'
 import { FichaForm } from './components/FichaForm'
 import { FichaPreview } from './components/FichaPreview'
+import { PagamentoForm } from './components/PagamentoForm'
+import { PagamentoPreview } from './components/PagamentoPreview'
 import { Toast } from './components/Toast'
 
 type CardCount = 1 | 2 | 3 | 4
-type TopTab = 'carteirinha' | 'ficha'
+type TopTab = 'carteirinha' | 'ficha' | 'pagamento'
 
 const INITIAL_CARD: CardData = {
   nome: '', dataInicio: '', categoria: '', matricula: '',
@@ -18,15 +20,22 @@ const INITIAL_FICHA: FichaData = {
   nome: '', cpf: '', rg: '', endereco: '', telefone: '',
   contatoNome: '', contatoTelefone: '', parentesco: '',
 }
+const INITIAL_PAGAMENTO: PagamentoData = {
+  nome: '', matricula: '', categoria: '',
+}
 
-const CARD_KEY  = 'xango-card-v1'
-const FICHA_KEY = 'xango-ficha-v1'
+const CARD_KEY       = 'xango-card-v1'
+const FICHA_KEY      = 'xango-ficha-v1'
+const PAGAMENTO_KEY  = 'xango-pagamento-v1'
 
 function loadSavedCards(): { count: CardCount; cards: Omit<CardData, 'foto'>[] } | null {
   try { const r = localStorage.getItem(CARD_KEY); return r ? JSON.parse(r) : null } catch { return null }
 }
 function loadSavedFicha(): FichaData | null {
   try { const r = localStorage.getItem(FICHA_KEY); return r ? JSON.parse(r) : null } catch { return null }
+}
+function loadSavedPagamento(): PagamentoData | null {
+  try { const r = localStorage.getItem(PAGAMENTO_KEY); return r ? JSON.parse(r) : null } catch { return null }
 }
 
 function countFilled(data: CardData): number {
@@ -79,9 +88,11 @@ export default function App() {
     Array.from({ length: loadSavedCards()?.count ?? 1 }, (_, i) => i > 0),
   )
   const [mobileTab, setMobileTab]             = useState<'form' | 'preview'>('form')
-  const [fichaData, setFichaData]             = useState<FichaData>(() => loadSavedFicha() ?? { ...INITIAL_FICHA })
-  const [fichaMobileTab, setFichaMobileTab]   = useState<'form' | 'preview'>('form')
-  const [toast, setToast]                     = useState(false)
+  const [fichaData, setFichaData]                 = useState<FichaData>(() => loadSavedFicha() ?? { ...INITIAL_FICHA })
+  const [fichaMobileTab, setFichaMobileTab]       = useState<'form' | 'preview'>('form')
+  const [pagamentoData, setPagamentoData]         = useState<PagamentoData>(() => loadSavedPagamento() ?? { ...INITIAL_PAGAMENTO })
+  const [pagamentoMobileTab, setPagamentoMobileTab] = useState<'form' | 'preview'>('form')
+  const [toast, setToast]                         = useState(false)
 
   useEffect(() => {
     try { localStorage.setItem(CARD_KEY, JSON.stringify({ count, cards: cards.map(({ foto: _, ...r }) => r) })) }
@@ -92,6 +103,11 @@ export default function App() {
     try { localStorage.setItem(FICHA_KEY, JSON.stringify(fichaData)) }
     catch { /* ignore */ }
   }, [fichaData])
+
+  useEffect(() => {
+    try { localStorage.setItem(PAGAMENTO_KEY, JSON.stringify(pagamentoData)) }
+    catch { /* ignore */ }
+  }, [pagamentoData])
 
   const handleCount = (n: CardCount) => {
     setCount(n)
@@ -131,7 +147,7 @@ export default function App() {
         {/* Top tabs */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <div className="max-w-6xl mx-auto px-5 sm:px-8 flex">
-            {(['carteirinha', 'ficha'] as const).map(tab => (
+            {(['carteirinha', 'ficha', 'pagamento'] as const).map(tab => (
               <button
                 key={tab}
                 onClick={() => setTopTab(tab)}
@@ -141,7 +157,7 @@ export default function App() {
                   borderBottom: topTab === tab ? '2px solid #D4A017' : '2px solid transparent',
                 }}
               >
-                {tab === 'carteirinha' ? 'Carteirinha' : 'Ficha'}
+                {tab === 'carteirinha' ? 'Carteirinha' : tab === 'ficha' ? 'Ficha' : 'Ficha de Pagamento'}
               </button>
             ))}
           </div>
@@ -237,6 +253,35 @@ export default function App() {
             <div className={`rounded-2xl p-6 ${mobileTab === 'preview' ? 'block' : 'hidden'} lg:block`}
               style={{ background: '#fff', border: '1px solid rgba(122,74,31,0.14)', boxShadow: '0 1px 4px rgba(59,31,14,0.06)' }}>
               <Preview cards={cards} onDownload={() => setToast(true)} />
+            </div>
+          </main>
+        </>
+      )}
+
+      {/* ── Pagamento tab ──────────────────────────────────────────────── */}
+      {topTab === 'pagamento' && (
+        <>
+          <MobileSubTabs active={pagamentoMobileTab} onChange={setPagamentoMobileTab} />
+
+          <main className="max-w-6xl mx-auto px-4 sm:px-8 py-7 grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+
+            {/* Form column */}
+            <div className={`rounded-2xl overflow-hidden ${pagamentoMobileTab === 'form' ? 'block' : 'hidden'} lg:block`}
+              style={{ background: '#fff', border: '1px solid rgba(122,74,31,0.14)', boxShadow: '0 1px 4px rgba(59,31,14,0.06)' }}>
+              <div className="px-5 py-4" style={{ borderBottom: '1px solid rgba(122,74,31,0.10)' }}>
+                <span className="font-cinzel text-sm font-semibold uppercase tracking-wide" style={{ color: '#3B1F0E' }}>
+                  Dados da Ficha de Pagamento
+                </span>
+              </div>
+              <div className="px-5 pb-6 pt-5">
+                <PagamentoForm data={pagamentoData} onChange={setPagamentoData} />
+              </div>
+            </div>
+
+            {/* Preview column */}
+            <div className={`rounded-2xl p-6 ${pagamentoMobileTab === 'preview' ? 'block' : 'hidden'} lg:block`}
+              style={{ background: '#fff', border: '1px solid rgba(122,74,31,0.14)', boxShadow: '0 1px 4px rgba(59,31,14,0.06)' }}>
+              <PagamentoPreview data={pagamentoData} onDownload={() => setToast(true)} />
             </div>
           </main>
         </>

@@ -2,7 +2,9 @@ import frenteUrl from '../assets/frente.png'
 import versoUrl from '../assets/verso.png'
 import fichaFrenteUrl from '../assets/ficha-frente.png'
 import fichaVersoUrl from '../assets/ficha-verso.png'
-import type { CardData, FichaData } from '../types'
+import pagamentoFrenteUrl from '../assets/pagamento-ficha-frente.png'
+import pagamentoVersoUrl from '../assets/pagamento-ficha-verso.png'
+import type { CardData, FichaData, PagamentoData } from '../types'
 
 // ─── Layout configuration ──────────────────────────────────────────────────────
 // All coordinates are in pixels relative to the full-size template image.
@@ -199,4 +201,59 @@ export async function renderFichaBack(
   ctx.fillText(data.contatoNome,     f.contatoNome.x,     f.contatoNome.y)
   ctx.fillText(data.contatoTelefone, f.contatoTelefone.x, f.contatoTelefone.y)
   ctx.fillText(data.parentesco,      f.parentesco.x,      f.parentesco.y)
+}
+
+// ─── Pagamento layout configuration ─────────────────────────────────────────
+
+const PAGAMENTO_FONT = {
+  size: 38,
+  family: 'Allura',
+  color: '#2d1b0e',
+  bold: true,
+}
+
+const PAGAMENTO_FRONT = {
+  bg: pagamentoFrenteUrl,
+  canvasWidth:  1515,
+  canvasHeight: 1043,
+  fields: {
+    nome:      { x: 520, y: 431 },
+    matricula: { x: 587, y: 530 },
+    categoria: { x: 1183, y: 528 },
+  },
+}
+
+const PAGAMENTO_BACK = {
+  bg: pagamentoVersoUrl,
+  canvasWidth:  1515,
+  canvasHeight: 1043,
+}
+
+export async function renderPagamentoFront(
+  canvas: HTMLCanvasElement,
+  data: PagamentoData,
+): Promise<void> {
+  canvas.width  = PAGAMENTO_FRONT.canvasWidth
+  canvas.height = PAGAMENTO_FRONT.canvasHeight
+  const ctx = canvas.getContext('2d')!
+
+  const bg = await loadImage(PAGAMENTO_FRONT.bg)
+  ctx.drawImage(bg, 0, 0, PAGAMENTO_FRONT.canvasWidth, PAGAMENTO_FRONT.canvasHeight)
+
+  applyFont(ctx, PAGAMENTO_FONT)
+  const f = PAGAMENTO_FRONT.fields
+  ctx.fillText(data.nome,      f.nome.x,      f.nome.y)
+  ctx.fillText(data.matricula, f.matricula.x, f.matricula.y)
+  ctx.fillText(data.categoria, f.categoria.x, f.categoria.y)
+}
+
+export async function renderPagamentoBack(
+  canvas: HTMLCanvasElement,
+): Promise<void> {
+  canvas.width  = PAGAMENTO_BACK.canvasWidth
+  canvas.height = PAGAMENTO_BACK.canvasHeight
+  const ctx = canvas.getContext('2d')!
+
+  const bg = await loadImage(PAGAMENTO_BACK.bg)
+  ctx.drawImage(bg, 0, 0, PAGAMENTO_BACK.canvasWidth, PAGAMENTO_BACK.canvasHeight)
 }
